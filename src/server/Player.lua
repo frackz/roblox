@@ -10,43 +10,41 @@ local Player = {
 }
 
 function Player.Added(player: Player)
-    player = Player:Convert(player)    
-    local Ready = player:CreateEvent('Ready'), player:CreateEvent('Changed')
+    local Functions = Player:Get(player)
+    local Ready = Functions:CreateEvent('Ready'), Functions:CreateEvent('Changed')
 
     local success, data = pcall(function()
-        return PlayerStore:GetAsync(tostring(player.Player.UserId))
+        return PlayerStore:GetAsync(tostring(player.UserId))
     end)
 
     data = data or {}
 
     if not success then
-        player:Print('Failed to load data!', data)
-        return player.Player:Kick("Failed to load data!")
+        Functions:Print('Failed to load data!', data)
+        return player:Kick("Failed to load data!")
     end
 
-    Player.Players[player.Player.UserId] = data
-    player:Print('Loaded data!', player:Stringify())
+    Player.Players[player.UserId] = data
+    Functions:Print('Loaded data!', Functions:Stringify())
 
-    player:SetKey('__temp', {})
+    Functions:SetKey('__temp', {})
 
     Ready:Fire()
 end
 
 function Player.Removing(player: Player)
-    player = Player:Convert(player)
+    player = Player:Get(player)
 
     player:SetKey('__temp', nil)
     player:Dump()
 end
 
-function Player:Convert(plr)
-    local player = {
-        Player = plr
-    }
+function Player:Get(player)
+    local data = {}
 
-    function player:Print(init: string, ...)
+    function data:Print(init: string, ...)
         print(
-            string.format('[%s] %s', player.Player.Name, init)
+            string.format('[%s] %s', player.Name, init)
         )
 
         for _, v in pairs((if type(... or nil) == "table" then ... else {...}) or {}) do
@@ -56,20 +54,20 @@ function Player:Convert(plr)
         end
     end
 
-    function player:GetEvent(name: string, isRunnable: boolean | nil): table | nil
-        local event = self.Player:WaitForChild(name)
+    function data:GetEvent(name: string, isRunnable: boolean | nil): table | nil
+        local event = player:WaitForChild(name)
         return if isRunnable then event else event.Event
     end
 
-    function player:Changed(): RBXScriptSignal | BindableEvent | nil
+    function data:Changed(): RBXScriptSignal | BindableEvent | nil
         return self:GetEvent('Changed', false)
     end
 
-    function player:Ready(): RBXScriptSignal | BindableEvent | nil
+    function data:Ready(): RBXScriptSignal | BindableEvent | nil
         return self:GetEvent('Ready', false)
     end
 
-    function player:SetKey(key: string, value: any)
+    function data:SetKey(key: string, value: any)
         self:Get()[key] = value
         
         if key ~= "__temp" then
@@ -77,15 +75,15 @@ function Player:Convert(plr)
         end
     end
 
-    function player:GetKey(key: string)
+    function data:GetKey(key: string)
         return self:Get()[key]
     end
 
-    function player:GetTempKey(key: string)
+    function data:GetTempKey(key: string)
         return (self:GetKey('__temp') or {})[key]
     end
 
-    function player:SetTempKey(key: string, value: any)
+    function data:SetTempKey(key: string, value: any)
         local temp = self:GetKey('__temp')
         temp[key] = value
 
@@ -93,17 +91,17 @@ function Player:Convert(plr)
         self:GetEvent('Changed', true):Fire(key, value, true)
     end
 
-    function player:Get(): table | nil
-        return Player.Players[player.Player.UserId] or {}
+    function data:Get(): table | nil
+        return Player.Players[player.UserId] or {}
     end
 
-    function player:Stringify(): string
+    function data:Stringify(): string
         return HttpService:JSONEncode(self:Get() or {})
     end
 
-    function player:Dump()
+    function data:Dump()
         local success, err = pcall(function()
-            PlayerStore:SetAsync(tostring(self.Player.UserId), self:Get())
+            PlayerStore:SetAsync(tostring(player.UserId), self:Get())
         end)
 
         if not success then
@@ -113,13 +111,13 @@ function Player:Convert(plr)
         self:Print('Saved data!', self:Stringify())
     end
 
-    function player:CreateEvent(name)
-        local instance = Instance.new('BindableEvent', player.Player)
+    function data:CreateEvent(name)
+        local instance = Instance.new('BindableEvent', player)
         instance.Name = name
         return instance
     end
 
-    return player
+    return data
 end
 
 Players.PlayerAdded:Connect(Player.Added)

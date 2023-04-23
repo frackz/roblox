@@ -3,15 +3,15 @@ local Player = require(script.Parent.Player)
 local Config = require(script.Parent.Config)
 
 Players.PlayerAdded:Connect(function(player)
-    local plr = Player:Convert(player)
-    plr:Ready():Wait()
+    local Functions = Player:Get(player)
+    Functions:Ready():Wait()
     
-    plr:Changed():Connect(function(key, value, temp)
+    Functions:Changed():Connect(function(key, value, temp)
         print(key,value,temp)
     end)
 
-    plr:SetKey('Cash', 100)
-    plr:SetTempKey('Plot', 1)
+    Functions:SetKey('Cash', 100)
+    Functions:SetTempKey('Plot', 1)
     
     --[[player:Ready():Wait()
 
