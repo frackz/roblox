@@ -5,36 +5,13 @@ local DataStoreService = game:GetService('DataStoreService')
 
 local PlayerStore = DataStoreService:GetDataStore("PlayerData")
 
-local Bind = require(script.Parent.Bind)
-
 local Player = {
     Players = {}
 }
 
-local function Wrap(Object, Interface)
-    local Proxy = newproxy(true)
-    local Meta = getmetatable(Proxy)
-
-    function Meta:__index(Key)
-        return Interface[Key] or Object[Key]
-    end
-
-    function Meta:__newindex(Key, Value)
-        Object[Key] = Value
-    end
-
-    return Proxy
-end
-
-function Player:test(): string
-    print("wthuwant")
-    return "hey"
-end
-
 function Player.Added(player: Player)
     player = Player:Convert(player)    
-    local Ready = player:CreateEvent('Ready')
-    local Changed = player:CreateEvent('Changed')
+    local Ready = player:CreateEvent('Ready'), player:CreateEvent('Changed')
 
     local success, data = pcall(function()
         return PlayerStore:GetAsync(tostring(player.Player.UserId))
@@ -81,29 +58,24 @@ function Player:Convert(player)
         end
     end
 
-    function player:GetEvent(name: string): table | nil
-        local changed = self.Player:WaitForChild(name) :: BindableEvent
-
-        local data = {}
-        function data:Fire(...)
-            changed:Fire(...)
-        end
-
-        return Wrap(changed.Event, data)
+    function player:GetEvent(name: string, isRunnable: boolean | nil): table | nil
+        local event = self.Player:WaitForChild(name)
+        return if isRunnable then event else event.Event
     end
 
-    function player:Changed(): table | nil
-        return self:GetEvent('Changed')
+    function player:Changed(run: boolean | nil): RBXScriptSignal | BindableEvent | nil
+        return self:GetEvent('Changed', run or false)
     end
 
-    function player:Ready(): table | nil
-        return self:GetEvent('Ready')
+    function player:Ready(run: boolean | nil): RBXScriptSignal | BindableEvent | nil
+        return self:GetEvent('Ready', run or false)
     end
 
-    function player:SetKey(key: string, value: any)
+    function player:SetKey(key: string, value: any, run: boolean | nil)
+        run = run or true
         self:Get()[key] = value
         
-        self:Changed():Fire(key, value)
+        if run then self:Changed(true):Fire(key, value, false) end
     end
 
     function player:GetKey(key: string)
@@ -118,7 +90,8 @@ function Player:Convert(player)
         local temp = self:GetKey('__temp')
         temp[key] = value
 
-        self:SetKey('__temp', temp)
+        self:SetKey('__temp', temp, false)
+        self:Changed(true):Fire(key, value, true)
     end
 
     function player:Get(): table | nil

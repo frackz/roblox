@@ -1,3 +1,4 @@
 return {
-    require(script.Player)
+    require(script.Player),
+    require(script.Config)
 }
