@@ -30,20 +30,18 @@ function Player.Added(player: Player)
     player:SetKey('__temp', {})
 
     Ready:Fire()
-    print("FIRE")
 end
 
 function Player.Removing(player: Player)
     player = Player:Convert(player)
 
     player:SetKey('__temp', nil)
-
     player:Dump()
 end
 
-function Player:Convert(player)
-    player = {
-        Player = player :: Player
+function Player:Convert(plr)
+    local player = {
+        Player = plr
     }
 
     function player:Print(init: string, ...)
@@ -63,19 +61,20 @@ function Player:Convert(player)
         return if isRunnable then event else event.Event
     end
 
-    function player:Changed(run: boolean | nil): RBXScriptSignal | BindableEvent | nil
-        return self:GetEvent('Changed', run or false)
+    function player:Changed(): RBXScriptSignal | BindableEvent | nil
+        return self:GetEvent('Changed', false)
     end
 
-    function player:Ready(run: boolean | nil): RBXScriptSignal | BindableEvent | nil
-        return self:GetEvent('Ready', run or false)
+    function player:Ready(): RBXScriptSignal | BindableEvent | nil
+        return self:GetEvent('Ready', false)
     end
 
-    function player:SetKey(key: string, value: any, run: boolean | nil)
-        run = run or true
+    function player:SetKey(key: string, value: any)
         self:Get()[key] = value
         
-        if run then self:Changed(true):Fire(key, value, false) end
+        if key ~= "__temp" then
+            self:GetEvent('Changed', true):Fire(key, value, false)
+        end
     end
 
     function player:GetKey(key: string)
@@ -90,8 +89,8 @@ function Player:Convert(player)
         local temp = self:GetKey('__temp')
         temp[key] = value
 
-        self:SetKey('__temp', temp, false)
-        self:Changed(true):Fire(key, value, true)
+        self:SetKey('__temp', temp)
+        self:GetEvent('Changed', true):Fire(key, value, true)
     end
 
     function player:Get(): table | nil
@@ -103,14 +102,10 @@ function Player:Convert(player)
     end
 
     function player:Dump()
-        print("DUMP")
         local success, err = pcall(function()
-            print(self:Get())
             PlayerStore:SetAsync(tostring(self.Player.UserId), self:Get())
-            print("set")
         end)
 
-        print("HEY")
         if not success then
             return self:Print('Failed to save data!', err)
         end
