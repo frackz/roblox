@@ -2,6 +2,7 @@ local HttpService = game:GetService('HttpService')
 local Players = game:GetService('Players')
 local RunService = game:GetService('RunService')
 local DataStoreService = game:GetService('DataStoreService')
+local Util = require(script.Parent.Util)
 
 local PlayerStore = DataStoreService:GetDataStore("PlayerData")
 
@@ -40,11 +41,11 @@ function Player.Removing(player: Player)
 end
 
 function Player:Get(player)
-    local data = {}
+    player = setmetatable({}, {__service = player, __index = Util.Wrap})
 
-    function data:Print(init: string, ...)
+    function player:Print(init: string, ...)
         print(
-            string.format('[%s] %s', player.Name, init)
+            string.format('[%s] %s', self.Name, init)
         )
 
         for _, v in pairs((if type(... or nil) == "table" then ... else {...}) or {}) do
@@ -54,20 +55,20 @@ function Player:Get(player)
         end
     end
 
-    function data:GetEvent(name: string, isRunnable: boolean | nil): table | nil
-        local event = player:WaitForChild(name)
+    function player:GetEvent(name: string, isRunnable: boolean | nil): table | nil
+        local event = self:WaitForChild(name)
         return if isRunnable then event else event.Event
     end
 
-    function data:Changed(): RBXScriptSignal | BindableEvent | nil
+    function player:Changed(): RBXScriptSignal | BindableEvent | nil
         return self:GetEvent('Changed', false)
     end
 
-    function data:Ready(): RBXScriptSignal | BindableEvent | nil
+    function player:Ready(): RBXScriptSignal | BindableEvent | nil
         return self:GetEvent('Ready', false)
     end
 
-    function data:SetKey(key: string, value: any)
+    function player:SetKey(key: string, value: any)
         self:Get()[key] = value
         
         if key ~= "__temp" then
@@ -75,15 +76,15 @@ function Player:Get(player)
         end
     end
 
-    function data:GetKey(key: string)
+    function player:GetKey(key: string)
         return self:Get()[key]
     end
 
-    function data:GetTempKey(key: string)
+    function player:GetTempKey(key: string)
         return (self:GetKey('__temp') or {})[key]
     end
 
-    function data:SetTempKey(key: string, value: any)
+    function player:SetTempKey(key: string, value: any)
         local temp = self:GetKey('__temp')
         temp[key] = value
 
@@ -91,17 +92,17 @@ function Player:Get(player)
         self:GetEvent('Changed', true):Fire(key, value, true)
     end
 
-    function data:Get(): table | nil
-        return Player.Players[player.UserId] or {}
+    function player:Get(): table | nil
+        return Player.Players[self.UserId] or {}
     end
 
-    function data:Stringify(): string
+    function player:Stringify(): string
         return HttpService:JSONEncode(self:Get() or {})
     end
 
-    function data:Dump()
+    function player:Dump()
         local success, err = pcall(function()
-            PlayerStore:SetAsync(tostring(player.UserId), self:Get())
+            PlayerStore:SetAsync(tostring(self.UserId), self:Get())
         end)
 
         if not success then
@@ -111,13 +112,17 @@ function Player:Get(player)
         self:Print('Saved data!', self:Stringify())
     end
 
-    function data:CreateEvent(name)
-        local instance = Instance.new('BindableEvent', player)
+    function player:Instance()
+        return Players:GetPlayerByUserId(self.UserId)
+    end
+
+    function player:CreateEvent(name)
+        local instance = Instance.new('BindableEvent', self:Instance())
         instance.Name = name
         return instance
     end
 
-    return data
+    return player
 end
 
 Players.PlayerAdded:Connect(Player.Added)
