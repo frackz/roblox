@@ -1,23 +1,17 @@
+-- Modules
+local Utililty = require(script.Parent.Utility)
+
 local Configs = script.Parent:WaitForChild('Configs')
 
-local Config = {
-    Configs = {}
-}
+local Config = { Configs = {} }
 
 for _, v in pairs(Configs:GetChildren()) do
     Config.Configs[v.Name] = require(v)
 end
 
-local function Split(text, sep)
-    local list = {}
-    string.gsub(text, '[^'..sep..']+', function(w)
-        table.insert(list, w)
-    end)
-    return list
-end
-
+--- Get a config key by path
 function Config:Get(name: string, ...)
-    local splitted = Split(name, '.')
+    local splitted = Utililty:Split(name, '.')
     if #splitted > 1 then
         local path = self.Configs
 

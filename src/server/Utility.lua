@@ -1,5 +1,6 @@
 local Utility = {}
 
+--- Wrap services together
 function Utility:Wrap(key: string)
     local service = getmetatable(self).__service
 	local success, output = pcall(function()
@@ -17,6 +18,14 @@ function Utility:Wrap(key: string)
 	else
 		return output
 	end
+end
+
+function Utility:Split(text: string, sep: string)
+    local list = {}
+    string.gsub(text, '[^'..sep..']+', function(w)
+        table.insert(list, w)
+    end)
+    return list
 end
 
 return Utility

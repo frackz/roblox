@@ -9,6 +9,6 @@ Players.PlayerAdded:Connect(function(player)
         print(key,value,temp)
     end)
 
-    player:SetKey('Cash', 100)
+    player:SetKey('Cash', 12)
     player:SetTempKey('Plot', 1)
 end)
