@@ -113,15 +113,9 @@ function Player:Get(player)
 
     --- Dump the player's data inside the Datastore.
     function player:Dump(): boolean | nil
-        print(tostring(self.UserId), self:Get())
-        print(type(tostring(self.UserId)), type(self:Get()))
         local success, err = pcall(function()
-            print("HEY")
             PlayerStore:SetAsync(tostring(self.UserId), self:Get())
-            print("BOB")
         end)
-
-        print("DONE")
 
         if not success then
             return false, self:Print('Failed to save data!', err)

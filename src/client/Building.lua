@@ -25,7 +25,7 @@ function Building:Update(instance : Instance)
 
         Title.Text = instance.Name
         Health.Text = part.Health
-        Progress.Size = UDim2.new(0, (part.Health / 100 * 200), 1, 0)
+        Progress.Size = UDim2.fromScale((part.Health / 100), 1)
     end
 end
 
