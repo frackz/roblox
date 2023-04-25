@@ -1,1 +1,3 @@
-print("Hello world, from client!")
+return {
+    require(script.Building)
+}
