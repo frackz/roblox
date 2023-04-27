@@ -1,3 +1,2 @@
 return {
-    require(script.Building)
 }

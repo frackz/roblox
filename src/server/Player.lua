@@ -1,5 +1,9 @@
+-- Paths
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local Shared = ReplicatedStorage:WaitForChild('Core')
+
 -- Modules
-local Utililty = require(script.Parent.Utility)
+local Utility = require(Shared:WaitForChild('Utility'))
 
 -- Services
 local HttpService = game:GetService('HttpService')
@@ -42,7 +46,7 @@ end
 
 --- Convert the player to add the methods...
 function Player:Get(player)
-    player = setmetatable({}, {__service = player, __index = Utililty.Wrap})
+    player = setmetatable({}, {__service = player, __index = Utility.Wrap})
 
     --- Print something with the player's name on it, mostly used for debugging
     function player:Print(init: string, ...)
