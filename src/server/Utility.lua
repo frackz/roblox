@@ -20,6 +20,7 @@ function Utility:Wrap(key: string)
 	end
 end
 
+--- Split a string using a seperator
 function Utility:Split(text: string, sep: string)
     local list = {}
     string.gsub(text, '[^'..sep..']+', function(w)

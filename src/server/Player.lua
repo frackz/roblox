@@ -47,12 +47,12 @@ function Player:Get(player)
     --- Print something with the player's name on it, mostly used for debugging
     function player:Print(init: string, ...)
         print(
-            string.format('[%s] %s', self.Name, init)
+            ('[%s] %s'):format(self.Name, init)
         )
 
         for _, v in pairs((if type(... or nil) == "table" then ... else {...}) or {}) do
             print(
-                string.format('- %s', v)
+                ('- %s'):format(v)
             )
         end
     end
@@ -63,7 +63,7 @@ function Player:Get(player)
         return if isRunnable then event else event.Event
     end
 
-    --- Get the changed event
+    --- Get the changed event, this will get fired whenever a key get changed
     function player:Changed(): RBXScriptSignal | nil
         return self:GetEvent('Changed', false)
     end
@@ -142,6 +142,7 @@ end
 Players.PlayerAdded:Connect(Player.Added)
 Players.PlayerRemoving:Connect(Player.Removing)
 
+-- When a server closes, it will save everyone's data
 game:BindToClose(function()
     if not RunService:IsStudio() then
         for _, v in pairs(Players:GetPlayers()) do
