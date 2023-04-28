@@ -25,6 +25,8 @@ function Config:Get(name: string, ...)
         end
 
         return if #(... or {}) > 0 then string.format((if type(path) == "string" then path else ""), ...) else path
+    else
+        return self.Configs[name]
     end
 
     return nil

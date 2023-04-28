@@ -4,6 +4,7 @@ local Shared = ReplicatedStorage:WaitForChild('Core')
 
 -- Modules
 local Utility = require(Shared:WaitForChild('Utility'))
+local Inventory = require(script.Parent.Inventory)
 
 -- Services
 local HttpService = game:GetService('HttpService')
@@ -139,6 +140,8 @@ function Player:Get(player)
         instance.Name = name
         return instance
     end
+
+    player.Inventory = Inventory:New(player)
 
     return player
 end
