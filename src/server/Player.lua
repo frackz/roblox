@@ -27,8 +27,7 @@ function Player.Added(player: Player)
     data = data or {}
 
     if not success then
-        player:Print('Failed to load data!', data)
-        return player:Kick("Failed to load data!")
+        return player:Kick("Failed to load data!"), player:Print('Failed to load data!', data)
     end
 
     Player.Players[player.UserId] = data
@@ -142,7 +141,7 @@ function Player:Get(player)
 
     --- Get the players cash module
     function player:Cash()
-        return 
+        return Cash:New(player)
     end
 
     --- Create a BindableEvent by name
