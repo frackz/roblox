@@ -134,15 +134,18 @@ function Player:Get(player)
         return Players:GetPlayerByUserId(self.UserId)
     end
 
+    --- Get the players inventory module
+    function player:Inventory()
+        return Inventory:New(player)
+    end
+
     --- Create a BindableEvent by name
     function player:CreateEvent(name: string)
         local instance = Instance.new('BindableEvent', self:Instance())
         instance.Name = name
         return instance
     end
-
-    player.Inventory = Inventory:New(player)
-
+    
     return player
 end
 

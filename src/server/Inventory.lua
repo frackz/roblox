@@ -5,22 +5,25 @@ local Items = require(Core:WaitForChild('Items'))
 
 local Extension = {}
 
-function Extension:New(player )
+function Extension:New(player: Player)
     local Inventory = {
         Categories = Items:Get(),
         Items = Items:GetItems(),
         Player = player
     }
 
-    function Inventory:Set(data)
+    --- Set the inventory data
+    function Inventory:Set(data: table)
         return self.Player:SetKey('Inventory', data)
     end
 
+    --- Get all the items from the inventory
     function Inventory:GetAll()
         return self.Player:GetKey('Inventory') or {}
     end
 
-    function Inventory:Give(item, amount)
+    --- Give a item to the player, can also specifiy a amount
+    function Inventory:Give(item: string, amount: number?)
         amount = amount or 1
 
         if not self.Items[item] then
@@ -37,7 +40,10 @@ function Extension:New(player )
         self:Set(items)
     end
 
-    function Inventory:Remove(item, amount)
+    --- Remove a item from the player, you can also use a amount
+    function Inventory:Remove(item: string, amount: number?)
+        amount = amount or 1
+
         if not self:Has(item) or self:Get(item) < amount then
             return false, "not_enough_items"
         end
@@ -52,15 +58,18 @@ function Extension:New(player )
         self:Set(items)
     end
 
+    --- Clear the inventory
     function Inventory:Clear()
-        self:Set({})
+        return self:Set({})
     end
 
-    function Inventory:Get(item)
+    --- Get a item
+    function Inventory:Get(item: string)
         return self:GetAll()[item]
     end
 
-    function Inventory:Has(item)
+    --- Check if the player has a item
+    function Inventory:Has(item: string)
         return self:Get(item) ~= nil
     end
 
