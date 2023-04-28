@@ -43,6 +43,7 @@ function Player.Removing(player: Player)
 
     player:SetKey('__temp', nil)
     player:Dump()
+    player:ClearData()
 end
 
 --- Convert the player to add the methods...
@@ -79,6 +80,10 @@ function Player:Get(player)
     end
 
     --- Set a key to a value, this will be saved (like Cash, etc)
+    function player:ClearData()
+        Player.Players[self.UserId] = nil
+    end
+
     function player:SetKey(key: string, value: any)
         self:Get()[key] = value
         
