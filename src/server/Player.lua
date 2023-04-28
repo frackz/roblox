@@ -5,6 +5,7 @@ local Shared = ReplicatedStorage:WaitForChild('Core')
 -- Modules
 local Utility = require(Shared:WaitForChild('Utility'))
 local Inventory = require(script.Parent.Inventory)
+local Cash = require(script.Parent.Cash)
 
 -- Services
 local HttpService = game:GetService('HttpService')
@@ -137,6 +138,11 @@ function Player:Get(player)
     --- Get the players inventory module
     function player:Inventory()
         return Inventory:New(player)
+    end
+
+    --- Get the players cash module
+    function player:Cash()
+        return 
     end
 
     --- Create a BindableEvent by name
