@@ -50,7 +50,7 @@ function Extension:New(player: Player)
 
         local items = self:GetAll()
         if self:Get(item) - amount ~= 0 then
-            items[item] -= amount         
+            items[item] -= amount
         end
 
         items[item] = nil

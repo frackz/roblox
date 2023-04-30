@@ -79,11 +79,12 @@ function Player:Get(player)
         return self:GetEvent('Ready', false)
     end
 
-    --- Set a key to a value, this will be saved (like Cash, etc)
+    --- Clear cached user data
     function player:ClearData()
         Player.Players[self.UserId] = nil
     end
 
+    --- Set a key to a value, this will be saved (like Cash, etc)
     function player:SetKey(key: string, value: any)
         self:Get()[key] = value
         

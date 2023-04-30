@@ -1,3 +1,3 @@
 return {
-    Cash = "You have %s dollars"
+    Cash = "%s$"
 }
