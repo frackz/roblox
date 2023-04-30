@@ -1,17 +1,20 @@
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
+-- Services
 local Players = game:GetService('Players')
 
-local Player = require(script.Parent.Player)
-
+-- Paths
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Core = ReplicatedStorage:WaitForChild('Core')
+local Update = ReplicatedStorage:WaitForChild('UpdateStats') :: RemoteEvent
+
+-- Modules
+local Player = require(script.Parent.Player)
 local Config = require(Core:WaitForChild('Config'))
 
-local UpdateStats = ReplicatedStorage:WaitForChild('UpdateStats') :: RemoteEvent
-
+-- Variables
 local Stats = {}
 
 function Stats:Update(player, name, value)
-    UpdateStats:FireClient(
+    Update:FireClient(
         player:Instance(),
         name,
         Config:Get('Player.Cash', tostring(value))
@@ -21,7 +24,6 @@ end
 Players.PlayerAdded:Connect(function(player)
     player = Player:Get(player)
     player:Ready():Wait()
-    
 
     Stats:Update(player, 'Cash', player:Cash():Get())
 

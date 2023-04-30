@@ -1,8 +1,11 @@
+-- Paths
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
-
 local Core = ReplicatedStorage:WaitForChild('Core')
+
+-- Modules
 local Items = require(Core:WaitForChild('Items'))
 
+-- Variables
 local Extension = {}
 
 function Extension:New(player: Player)

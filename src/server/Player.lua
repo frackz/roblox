@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Shared = ReplicatedStorage:WaitForChild('Core')
 
 -- Modules
+local Notifications = require(script.Parent.Notifications)
 local Utility = require(Shared:WaitForChild('Utility'))
 local Inventory = require(script.Parent.Inventory)
 local Cash = require(script.Parent.Cash)
@@ -13,6 +14,7 @@ local Players = game:GetService('Players')
 local RunService = game:GetService('RunService')
 local DataStoreService = game:GetService('DataStoreService')
 
+-- Variables
 local PlayerStore = DataStoreService:GetDataStore("PlayerData")
 local Player = { Players = {} }
 
@@ -103,7 +105,7 @@ function Player:Get(player)
         return (self:GetKey('__temp') or {})[key]
     end
 
-    --- set a temporary key, this will not save (like Plot, etc)
+    --- Set a temporary key, this will not save (like Plot, etc)
     function player:SetTempKey(key: string, value: any)
         local temp = self:GetKey('__temp')
         temp[key] = value
@@ -148,6 +150,11 @@ function Player:Get(player)
     --- Get the players cash module
     function player:Cash()
         return Cash:New(player)
+    end
+
+    --- Get the notification function
+    function player:Notifications()
+        return Notifications:New(player)
     end
 
     --- Create a BindableEvent by name

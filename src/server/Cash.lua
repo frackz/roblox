@@ -1,3 +1,4 @@
+-- Variables
 local Extension = {}
 
 function Extension:New(player: Player)
