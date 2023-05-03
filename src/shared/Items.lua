@@ -8,7 +8,7 @@ function Items:Get()
     return self.Items
 end
 
-function Items:GetItems()
+function Items:Items()
     local items = self:Get()
     local data = {}
     for k,v in pairs(items) do

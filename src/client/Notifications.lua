@@ -1,13 +1,15 @@
 -- Services
 local Players = game:GetService("Players")
 
+-- Modules
+local Client = require(script.Parent)
+local Core = Client:Core()
+
+local Config = require(Core:Get('Config'))
+
 -- Required
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Notification = ReplicatedStorage:WaitForChild('Notification') :: RemoteEvent
-local Core = ReplicatedStorage:WaitForChild('Core')
-
--- Modules
-local Config = require(Core:WaitForChild('Config'))
 
 -- Variables
 local Player = Players.LocalPlayer

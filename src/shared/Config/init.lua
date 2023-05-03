@@ -1,11 +1,10 @@
 -- Modules
 local Utililty = require(script.Parent.Utility)
 
-local Configs = script.Parent:WaitForChild('Configs')
 
 local Config = { Configs = {} }
 
-for _, v in pairs(Configs:GetChildren()) do
+for _, v in pairs(script:GetChildren()) do
     Config.Configs[v.Name] = require(v)
 end
 
@@ -25,11 +24,9 @@ function Config:Get(name: string, ...)
         end
 
         return if #(... or {}) > 0 then ((if type(path) == "string" then path else "")):format(...) else path
-    else
-        return self.Configs[name]
     end
-
-    return nil
+    
+    return self.Configs[name]
 end
 
 return Config
