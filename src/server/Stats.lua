@@ -1,18 +1,15 @@
--- Services
-local Players = game:GetService('Players')
-
--- Paths
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local Core = ReplicatedStorage:WaitForChild('Core')
-local Update = ReplicatedStorage:WaitForChild('UpdateStats') :: RemoteEvent
-
--- Modules
-local Player = require(script.Parent.Player)
-local Config = require(Core:WaitForChild('Config'))
-
 -- Variables
 local Stats = {}
 
+local Server = require(script.Parent)
+local Core, Player = Server:Core(), require(script.Parent.Player)
+
+local Remotes, Config = Core:Remotes(), Core:Config()
+
+-- Services and Paths
+local Players, Update = game:GetService('Players'), Remotes:WaitForChild('UpdateStats')
+
+-- Modules
 function Stats:Update(player, name, value)
     Update:FireClient(
         player:Instance(),

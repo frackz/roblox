@@ -1,8 +1,10 @@
--- Paths
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
 -- Variables
-local Notification = ReplicatedStorage:WaitForChild('Notification') :: RemoteEvent
+local Server = require(script.Parent)
+
+local Core = Server:Core()
+local Remotes = Core:Remotes()
+
+local Notification = Remotes:WaitForChild('Notification') :: RemoteEvent
 local Extension = {}
 
 function Extension:New(player: Player)

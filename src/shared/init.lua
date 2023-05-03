@@ -8,8 +8,16 @@ function Init:Remotes()
     return self:Resources():WaitForChild('Remotes')
 end
 
-function Init:Get(name: string)
-    return script:WaitForChild(name)
+function Init:Config()
+    return require(script:WaitForChild('Config'))
+end
+
+function Init:Items()
+    return require(script:WaitForChild('Items'))
+end
+
+function Init:Utility()
+    return require(script:WaitForChild('Utility'))
 end
 
 return Init

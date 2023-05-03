@@ -1,13 +1,3 @@
--- Paths
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local Shared = ReplicatedStorage:WaitForChild('Core')
-
--- Modules
-local Notifications = require(script.Parent.Notifications)
-local Utility = require(Shared:WaitForChild('Utility'))
-local Inventory = require(script.Parent.Inventory)
-local Cash = require(script.Parent.Cash)
-
 -- Services
 local HttpService = game:GetService('HttpService')
 local Players = game:GetService('Players')
@@ -15,15 +5,25 @@ local RunService = game:GetService('RunService')
 local DataStoreService = game:GetService('DataStoreService')
 
 -- Variables
-local PlayerStore = DataStoreService:GetDataStore("PlayerData")
+local Server = require(script.Parent)
+local Core = Server:Core()
+
+local Store = DataStoreService:GetDataStore("PlayerData")
 local Player = { Players = {} }
+
+-- Modules
+local Notifications = Server:Notifications()
+local Inventory = Server:Inventory()
+local Cash = Server:Cash()
+
+local Utility = Core:Utility()
 
 function Player.Added(player: Player)
     player = Player:Get(player)
     local Ready = player:CreateEvent('Ready'), player:CreateEvent('Changed')
 
     local success, data = pcall(function()
-        return PlayerStore:GetAsync(tostring(player.UserId))
+        return Store:GetAsync(tostring(player.UserId))
     end)
 
     data = data or {}
@@ -127,7 +127,7 @@ function Player:Get(player)
     --- Dump the player's data inside the Datastore.
     function player:Dump(): boolean | nil
         local success, err = pcall(function()
-            PlayerStore:SetAsync(tostring(self.UserId), self:Get())
+            Store:SetAsync(tostring(self.UserId), self:Get())
         end)
 
         if not success then

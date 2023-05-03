@@ -1,19 +1,14 @@
--- Services
-local Players = game:GetService("Players")
-
 -- Modules
 local Client = require(script.Parent)
 local Core = Client:Core()
 
-local Config = require(Core:Get('Config'))
+local Config = Core:Config()
+local Remotes = Core:Remotes()
 
 -- Required
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Notification = ReplicatedStorage:WaitForChild('Notification') :: RemoteEvent
+local Notification = Remotes:WaitForChild('Notification') :: RemoteEvent
 
 -- Variables
-local Player = Players.LocalPlayer
-local PlayerGui = Player.PlayerGui
 local Notifications = {
     Delay = 0,
     Text = nil,
@@ -21,7 +16,7 @@ local Notifications = {
 }
 
 -- GUIS
-local Screen = PlayerGui:WaitForChild('Notifications') :: ScreenGui
+local Screen = Client:Gui():WaitForChild('Notifications') :: ScreenGui
 local Label = Screen:WaitForChild('Notification') :: TextLabel
 
 local Border = Label:WaitForChild('Border') :: UIStroke
