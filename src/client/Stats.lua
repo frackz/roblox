@@ -3,7 +3,7 @@ local Client = require(script.Parent)
 
 -- Variables
 local Remotes = Client:Core():Remotes()
-local Stats = { Cash = 0 }
+local Stats = {}
 
 -- Paths
 local UpdateStats = Remotes:WaitForChild('UpdateStats') :: RemoteEvent
@@ -13,8 +13,6 @@ function Stats:Update(name: string, value: any)
     local text = StatsGui:FindFirstChild(name) :: TextLabel | nil
 
     if text then
-        self[name] = value
-
         text.Text = value
     end
 end

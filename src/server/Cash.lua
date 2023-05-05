@@ -2,18 +2,16 @@
 local Extension = {}
 
 function Extension:New(player: Player)
-    local Cash = {
-        Player = player
-    }
+    local Cash = {}
 
     --- Get the players cash
     function Cash:Get()
-        return self.Player:GetKey('Cash') or 0
+        return player:GetKey('Cash') or 0
     end
 
     --- Set the players cash
     function Cash:Set(amount: number)
-        return self.Player:SetKey('Cash', amount)
+        return player:SetKey('Cash', amount)
     end
 
     --- Give the player some cash

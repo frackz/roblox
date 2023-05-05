@@ -1,7 +1,3 @@
 return {
-    GPU = {
-        ["3060"] = {
-            Description = "Hey"
-        }
-    }
+    Hi = "Hello.",
 }

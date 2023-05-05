@@ -12,8 +12,6 @@ local Store = DataStoreService:GetDataStore("PlayerData")
 local Player = { Players = {} }
 
 -- Modules
-local Notifications = Server:Notifications()
-local Inventory = Server:Inventory()
 local Cash = Server:Cash()
 
 local Utility = Core:Utility()
@@ -142,19 +140,9 @@ function Player:Get(player)
         return Players:GetPlayerByUserId(self.UserId)
     end
 
-    --- Get the players inventory module
-    function player:Inventory()
-        return Inventory:New(player)
-    end
-
     --- Get the players cash module
     function player:Cash()
         return Cash:New(player)
-    end
-
-    --- Get the notification function
-    function player:Notifications()
-        return Notifications:New(player)
     end
 
     --- Create a BindableEvent by name
